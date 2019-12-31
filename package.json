@@ -1,0 +1,38 @@
+{
+  "name": "kyoko-frontend",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build"
+  },
+  "dependencies": {
+    "@sweetalert2/theme-dark": "^3.1.0",
+    "axios": "^0.19.0",
+    "core-js": "^3.4.3",
+    "dateformat": "^3.0.3",
+    "express": "^4.17.1",
+    "express-session": "^1.17.0",
+    "node-dht-sensor": "^0.4.0",
+    "onoff": "^5.0.1",
+    "pi-temperature": "^2.1.0",
+    "pigpio": "^2.0.1",
+    "sqlite3": "^4.1.1",
+    "sweetalert2": "^9.5.4",
+    "vue": "^2.6.10",
+    "vue-router": "^3.1.3",
+    "vuetify": "^2.1.0",
+    "vuex": "^3.1.2"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "^4.1.0",
+    "@vue/cli-plugin-router": "^4.1.0",
+    "@vue/cli-plugin-vuex": "^4.1.0",
+    "@vue/cli-service": "^4.1.0",
+    "sass": "^1.19.0",
+    "sass-loader": "^8.0.0",
+    "vue-cli-plugin-vuetify": "^2.0.2",
+    "vue-template-compiler": "^2.6.10",
+    "vuetify-loader": "^1.3.0"
+  }
+}
