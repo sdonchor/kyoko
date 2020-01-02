@@ -1,3 +1,6 @@
+const Gpio = require("onoff").Gpio;
+
+
 const buzzer = require("./buzzer");
 const relay_ins1 = new Gpio(2, "high", { reconfigureDirection: false });
 module.exports = {

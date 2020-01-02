@@ -19,3 +19,8 @@ yarn-error.log*
 *.njsproj
 *.sln
 *.sw?
+
+# Backend files
+/src/backend/database/database.db
+/src/backend/readings/dht11.json
+/src/backend/readings/rpi_temp.json

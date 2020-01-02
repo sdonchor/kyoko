@@ -6,6 +6,7 @@ const fs = require("fs");
 
 const dateformat = require("dateformat");
 
+const relay = require('./device_controllers/relay')
 
 
   router.use(function middlewaretest(req, res, next) {
@@ -42,17 +43,16 @@ router.get("/logincheck", async function(req, res) {
 });
 
 router.post("/setLedStrip", function(req, res) {
-  if (!(req.session.authData && req.session.authData.permission_level > 2))
-    res.end("0");
-
+ /* if (!(req.session.authData && req.session.authData.permission_level > 2))
+    res.end("0");*/
   deviceControler.setLedStrip(req.body.r, req.body.g, req.body.b);
   res.end("ok");
 });
 
 router.get("/openDoor", function(req, res) {
-  if (!(req.session.authData && req.session.authData.permission_level > 2))
-    res.end("0");
-  deviceControler.openDoor();
+ /* if (!(req.session.authData && req.session.authData.permission_level > 2))
+    res.end("0");*/
+  relay.openDoor();
   res.end("ok");
 });
 

@@ -1,22 +1,22 @@
 <template>
-  <v-card class="pa-2" outlined tile>
-    <v-simple-table class="table table-bordered">
-      <thead>
-        <tr>
-          <th colspan="2">Teraz w mieszkaniu:</th>
-        </tr>
-      </thead>
+  <v-card class="pa-2 scroll" outlined tile>
+    <v-card-title>
+      Teraz w mieszkaniu:
+    </v-card-title>
+    <v-simple-table class="temptable" width="20%">
       <tbody>
         <tr>
-          <td>Temperatura:</td>
+          <td>
+            <v-icon display="inline">mdi-thermometer</v-icon> Temperatura:
+          </td>
           <td>{{ temp }}&deg;C</td>
         </tr>
         <tr>
-          <td>Wilgotność powietrza:</td>
+          <td><v-icon>mdi-water-percent</v-icon> Wilgotność powietrza:</td>
           <td>{{ humid }}%</td>
         </tr>
         <tr>
-          <td>Temperatura RaspberryPi:</td>
+          <td><v-icon>mdi-chip</v-icon> Temperatura RaspberryPi:</td>
           <td>{{ rpitemp }}&deg;C</td>
         </tr>
       </tbody>
@@ -25,7 +25,6 @@
 </template>
 
 <script>
-
 export default {
   name: "Temperature",
   data: function() {
@@ -34,8 +33,8 @@ export default {
       dht_timer: null,
       rpi_timer: null,
       temp: null,
-      humid:null,
-      rpitemp:null,
+      humid: null,
+      rpitemp: null
     };
   },
   methods: {
@@ -51,8 +50,8 @@ export default {
       });
     }
   },
-  created(){
-    this.apiUrl=this.$apiUrl;
+  created() {
+    this.apiUrl = this.$apiUrl;
   },
   mounted() {
     this.dht_timer = setInterval(this.getDht, 10000);
@@ -64,4 +63,11 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.temptable td {
+  white-space: nowrap;
+}
+.scroll {
+  overflow-x: hidden;
+}
+</style>

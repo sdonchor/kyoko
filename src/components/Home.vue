@@ -1,21 +1,36 @@
 <template>
   <div>
-    <v-container>
+    <v-container fluid fill-height>
       <v-row>
-        <v-col> </v-col>
-        <v-col>
-         <Temperature></Temperature>
+        <v-col lg = "6" overflow="hidden">
+          <Temperature></Temperature>
+        </v-col>
+        <v-col  lg = "6">
+          <OpenDoor></OpenDoor>
         </v-col>
       </v-row>
+      <v-row>
+        <v-col  lg = "6">
+ <LedColorPicker></LedColorPicker>
+        </v-col>
+        <v-col  lg  = "6">
+         
+        </v-col>
+      </v-row>
+  
     </v-container>
   </div>
 </template>
 
 <script>
 import Temperature from './cards/Temperature.vue'
+import OpenDoor from './cards/OpenDoor.vue'
+import LedColorPicker from './cards/LedColorPicker.vue'
 export default {
   components:{
-    Temperature
+    Temperature,
+    OpenDoor,
+    LedColorPicker
   },
   name: "Home",
   data: function() {
