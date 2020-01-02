@@ -1,4 +1,4 @@
-# kyoko-frontend
+# kyoko
 
 ## Project setup
 ```
