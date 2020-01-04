@@ -1,16 +1,8 @@
 const Gpio = require("onoff").Gpio;
 const fs = require("fs");
-const pigpio = require("pigpio").Gpio;
+
 
 const utils = require("../util/utils");
-
-
-const led_strip_red = new pigpio(21, { mode: pigpio.OUTPUT });
-const led_strip_green = new pigpio(20, { mode: pigpio.OUTPUT });
-const led_strip_blue = new pigpio(16, { mode: pigpio.OUTPUT });
-const rgb_interval = null;
-const animation_speed = 10;
-
 
 
 const button = new Gpio(17, "in", "rising", { debounceTimeout: 10 });
@@ -20,6 +12,7 @@ const button = new Gpio(17, "in", "rising", { debounceTimeout: 10 });
 const dht11 = require('./dht11')
 const rpi = require('./rpi')
 const buzzer = require('./buzzer')
+const led_strip = require('./led_strip')
 
 /******************/
 
@@ -41,71 +34,12 @@ button.watch((err, value) => {
     throw err;
   } else {
     buzzer.stopBeep();
+    led_strip.hsvCycleOn() ? led_strip.hsvCycleStop() : led_strip.hsvCycleStart();
   }
 });
 
-function cycleHSV(hue, dir) {
-  if(stopsignal)
-  {
-    stopsignal==false;
-    return;
-  }
-  let rgb = utils.HSVtoRGB(hue/360, 1, 1);
-  setLedStrip(Math.round(rgb[0]),Math.round(rgb[1]),Math.round(rgb[2]));
-  if (dir === "up") {
-    if (hue >= 360) {
-      setTimeout(function() {
-        cycleHSV(359, "down");
-      }, animation_speed);
-    } else {
-      setTimeout(function() {
-        cycleHSV(hue + 1, "up");
-      }, animation_speed);
-    }
-  } else if (dir === "down") {
-    if (hue <= 0) {
-      setTimeout(function() {
-        cycleHSV(1, "up");
-      }, animation_speed);
-    } else {
-      setTimeout(function() {
-        cycleHSV(hue - 1, "down");
-      }, animation_speed);
-    }
-  }
-}
-function setLedStrip(r, g, b) {
-  led_strip_red.pwmWrite(r);
-  led_strip_green.pwmWrite(g);
-  led_strip_blue.pwmWrite(b);
-}
-
-
-
-
-
-
-function ledStripRandom() {
-  let r = utils.randomInt(0, 255);
-  let g = utils.randomInt(0, 255 - r);
-  let b = utils.randomInt(0, 255 - r - g);
-
-  led_strip_red.pwmWrite(r);
-  led_strip_green.pwmWrite(g);
-  led_strip_blue.pwmWrite(b);
-}
-
-
-
-
 
 module.exports = {
-  
-  setLedStrip: function(r, g, b) {
-    led_strip_red.pwmWrite(r);
-    led_strip_green.pwmWrite(g);
-    led_strip_blue.pwmWrite(b);
-  },
   alarmOn: function(time) {
     let time_tmp = time.split(":");
     let hours = time_tmp[0];

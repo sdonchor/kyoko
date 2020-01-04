@@ -4,10 +4,11 @@ const db = require("./database/database_handler");
 const deviceControler = require("./device_controllers/device_controller");
 const fs = require("fs");
 
+
 const dateformat = require("dateformat");
 
 const relay = require('./device_controllers/relay')
-
+const led_strip = require('./device_controllers/led_strip')
 
   router.use(function middlewaretest(req, res, next) {
   /*let ua = req.headers["user-agent"];
@@ -45,7 +46,7 @@ router.get("/logincheck", async function(req, res) {
 router.post("/setLedStrip", function(req, res) {
  /* if (!(req.session.authData && req.session.authData.permission_level > 2))
     res.end("0");*/
-  deviceControler.setLedStrip(req.body.r, req.body.g, req.body.b);
+  led_strip.setLedStrip(req.body.r, req.body.g, req.body.b);
   res.end("ok");
 });
 
