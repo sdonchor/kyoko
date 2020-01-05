@@ -3,7 +3,12 @@ let dbpath = "./src/backend/database/database.db";
 const crypto = require("crypto");
 
 var sqlite3 = require("sqlite3");
-var db = new sqlite3.Database(dbpath);
+var db = new sqlite3.Database(dbpath, (err)=>{
+  if(err)
+  {
+    console.log(err.message);
+  }
+});
 
 module.exports = {
   auth: function(pw, session, session_id) {
@@ -22,7 +27,6 @@ module.exports = {
             }
             let authData = {};
             authData.user = row.name;
-            authData.user_pic = row.pic;
             authData.permission_level = row.permission_level;
             authData.session_id = session_id;
             authData.id = row.id;

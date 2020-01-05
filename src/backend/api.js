@@ -3,13 +3,14 @@ const router = express.Router();
 const db = require("./database/database_handler");
 const deviceControler = require("./device_controllers/device_controller");
 const fs = require("fs");
-
-
 const dateformat = require("dateformat");
 
 const relay = require('./device_controllers/relay')
 const led_strip = require('./device_controllers/led_strip')
 
+const alarms=require('./modules/alarms')
+
+/*****MIDDLEWARE*****/
   router.use(function middlewaretest(req, res, next) {
   /*let ua = req.headers["user-agent"];
   let location = geoip.allData(req.ip);
@@ -20,6 +21,7 @@ const led_strip = require('./device_controllers/led_strip')
   next();
 });
 
+/*****AUTHORIZATION*****/
 router.post("/login", async function(req, res) {
   let auth = await db.auth(req.body.password, req.session, req.sessionID);
   if (!auth) {
@@ -43,6 +45,7 @@ router.get("/logincheck", async function(req, res) {
   }
 });
 
+/*****LED STRIP*****/
 router.post("/setLedStrip", function(req, res) {
   /* if (!(req.session.authData && req.session.authData.permission_level > 2))
      res.end("0");*/
@@ -64,6 +67,7 @@ router.post("/setLedStrip", function(req, res) {
    res.end("ok");
  });
 
+ /*****RELAY*****/
 router.get("/openDoor", function(req, res) {
  /* if (!(req.session.authData && req.session.authData.permission_level > 2))
     res.end("0");*/
@@ -75,15 +79,15 @@ router.get("/openDoorToken", async function(req, res) {
   if (req.query.token) {
     let auth = await db.tokenAuth(req.query.token);
     if (auth == 1) {
-      deviceControler.openDoor();
+      relay.openDoor();
       res.end("ok");
       return;
     }
   }
-  console.log(req.query.token);
   res.end("bad token");
 });
 
+/*****SENSOR DATA*****/
 router.get("/getDHT11Reading", async function(req, res) {
   let json = fs.readFileSync("./src/backend/readings/dht11.json");
   res.end(json);
@@ -94,10 +98,16 @@ router.get("/getRpiTemp", async function(req, res) {
   res.end(json);
 });
 
-router.post("/alarmOn", function(req, res) {
-  if (!(req.session.authData && req.session.authData.permission_level > 2))
-    res.end("0");
-  deviceControler.alarmOn(req.body.time);
+/*****ALARMS*****/
+router.get("/getAlarms", function(req, res) {
+  res.json(alarms.getAlarms());
+});
+
+router.post("/setAlarm", function(req,res){
+  let description = req.body.description;
+  let time = req.body.time;
+  alarms.addAlarm(description,time);
   res.end("ok");
 });
+
 module.exports = router;
