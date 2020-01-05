@@ -21,6 +21,7 @@ yarn-error.log*
 *.sw?
 
 # Backend files
-/src/backend/database/database.db
-/src/backend/readings/dht11.json
-/src/backend/readings/rpi_temp.json
+src/backend/database/database.db
+src/backend/readings/dht11.json
+src/backend/readings/rpi_temp.json
+src/backend/readings/dht11.json

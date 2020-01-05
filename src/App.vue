@@ -7,39 +7,48 @@
     >
       <v-list dense>
 
-        <v-list-item @click="">
+        <v-list-item to="/">
           <v-list-item-action>
             <v-icon>mdi-home</v-icon>
           </v-list-item-action>
           <v-list-item-content>
-            <v-list-item-title>Strona główna</v-list-item-title>
+            <v-list-item-title>Dashboard</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
 
-        <v-list-item @click="">
+        <v-list-item to="/alarms">
+          <v-list-item-action>
+            <v-icon>mdi-alarm</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>Alarms</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+
+        <v-list-item to="/control">
           <v-list-item-action>
             <v-icon>mdi-tune</v-icon>
           </v-list-item-action>
           <v-list-item-content>
-            <v-list-item-title>Panel sterowania</v-list-item-title>
+            <v-list-item-title>Control panel</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
 
-        <v-list-item @click="">
+        <v-list-item to="/readings">
           <v-list-item-action>
             <v-icon>mdi-chart-line</v-icon>
           </v-list-item-action>
           <v-list-item-content>
-            <v-list-item-title>Odczyty</v-list-item-title>
+            <v-list-item-title>Readings</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
 
-        <v-list-item @click="">
+        <v-list-item to="/config">
           <v-list-item-action>
             <v-icon>mdi-settings</v-icon>
           </v-list-item-action>
           <v-list-item-content>
-            <v-list-item-title>Konfiguracja</v-list-item-title>
+            <v-list-item-title>Configuration</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
 
@@ -65,7 +74,7 @@
           align-center
           justify-center
         >
-          <v-flex shrink>
+          <v-flex>
             <router-view/>
           </v-flex>
         </v-layout>

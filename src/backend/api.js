@@ -44,11 +44,25 @@ router.get("/logincheck", async function(req, res) {
 });
 
 router.post("/setLedStrip", function(req, res) {
- /* if (!(req.session.authData && req.session.authData.permission_level > 2))
-    res.end("0");*/
-  led_strip.setLedStrip(req.body.r, req.body.g, req.body.b);
-  res.end("ok");
-});
+  /* if (!(req.session.authData && req.session.authData.permission_level > 2))
+     res.end("0");*/
+   led_strip.setLedStrip(req.body.r, req.body.g, req.body.b);
+   res.end("ok");
+ });
+
+ router.get("/discoOn", function(req, res) {
+  /* if (!(req.session.authData && req.session.authData.permission_level > 2))
+     res.end("0");*/
+   led_strip.hsvCycleStart();
+   res.end("ok");
+ });
+
+ router.get("/discoOff", function(req, res) {
+  /* if (!(req.session.authData && req.session.authData.permission_level > 2))
+     res.end("0");*/
+   led_strip.hsvCycleStop();
+   res.end("ok");
+ });
 
 router.get("/openDoor", function(req, res) {
  /* if (!(req.session.authData && req.session.authData.permission_level > 2))

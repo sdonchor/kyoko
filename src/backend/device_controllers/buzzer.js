@@ -2,11 +2,15 @@ const Gpio = require("onoff").Gpio;
 
 const buzzer = new Gpio(26, "out");
 let beepInterval = null;
+
 let stopsignal = false;
+
+
 
 module.exports = {
   stopBeep: function() { //FIXME 
     stopsignal = true;
+    clearInterval(beepInterval);
     beepInterval=null;
     buzzer.writeSync(0);
   },

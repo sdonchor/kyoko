@@ -1,22 +1,22 @@
 <template>
   <v-card class="pa-2 scroll" outlined tile>
     <v-card-title>
-      Teraz w mieszkaniu:
+      Right now:
     </v-card-title>
-    <v-simple-table class="temptable" width="20%">
+    <v-simple-table class="temptable">
       <tbody>
         <tr>
           <td>
-            <v-icon display="inline">mdi-thermometer</v-icon> Temperatura:
+            <v-icon display="inline">mdi-thermometer</v-icon> Temperature:
           </td>
           <td>{{ temp }}&deg;C</td>
         </tr>
         <tr>
-          <td><v-icon>mdi-water-percent</v-icon> Wilgotność powietrza:</td>
+          <td><v-icon>mdi-water-percent</v-icon> Humidity:</td>
           <td>{{ humid }}%</td>
         </tr>
         <tr>
-          <td><v-icon>mdi-chip</v-icon> Temperatura RaspberryPi:</td>
+          <td><v-icon>mdi-chip</v-icon> RPi temperature:</td>
           <td>{{ rpitemp }}&deg;C</td>
         </tr>
       </tbody>

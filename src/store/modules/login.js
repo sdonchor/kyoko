@@ -1,7 +1,7 @@
 import Axios from "axios";
 
 const state = {
-  authdata: "test"
+  authdata: null
 };
 const getters = {
   getAuthdata: state => state.authdata
