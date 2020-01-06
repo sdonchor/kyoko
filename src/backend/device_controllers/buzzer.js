@@ -8,7 +8,7 @@ let stopsignal = false;
 
 
 module.exports = {
-  stopBeep: function() { //FIXME 
+  stopBeep: function() { 
     stopsignal = true;
     clearInterval(beepInterval);
     beepInterval=null;

@@ -14,8 +14,7 @@
           {{ alarm.time }}
         </td>
         <td>
-          <v-btn color="error"><v-icon>mdi-close-circle</v-icon></v-btn>
-          <v-btn class="ml-3" color="primary"><v-icon>mdi-pencil</v-icon></v-btn>
+          <v-btn color="error" @click.stop="removeAlarm(idx)"><v-icon>mdi-close-circle</v-icon></v-btn>
         </td>
       </tr>
       </tbody>
@@ -26,33 +25,45 @@
 <script>
 export default {
   name: "AlarmsList",
+  props: ["alarmsrefreshsignal"],
   data: function() {
     return {
-      alarms: [
-        { description: "test1", time: "12:03" },
-        { description: "test2", time: "4:20" },
-        { description: "test3", time: "25:00" },
-       
-      ],
+      alarms: [],
       newAlarmTime: null,
       newAlarmDesc: null
     };
   },
   methods: {
-    getAllAlarms: function() {
+    getAlarms: function() {
       axios
-        .get("/api/getAllAlarms")
+        .get("/api/getAlarms")
         .then(response => {
-          this.alarms = response.data.alarms;
+          this.alarms = response.data;
+          this.$emit('refreshdone');
         })
         .catch(err => {
           console.log(err);
         });
+    },
+    removeAlarm: function(idx){
+      axios.post('/api/removeAlarm',{
+        idx: idx
+      }).then((response)=>{
+        this.getAlarms();
+      })
     }
   },
   created() {},
   mounted() {
-    //this.getAllAlarms();
+    this.getAlarms();
+  },
+  watch:{
+    alarmsrefreshsignal: function(){
+      if(this.alarmsrefreshsignal)
+      {
+        this.getAlarms();
+      }
+    }
   }
 };
 </script>

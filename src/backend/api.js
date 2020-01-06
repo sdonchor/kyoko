@@ -1,23 +1,22 @@
 const express = require("express");
 const router = express.Router();
 const db = require("./database/database_handler");
-const deviceControler = require("./device_controllers/device_controller");
+const deviceControler = require("./device_controllers/devices");
 const fs = require("fs");
 const dateformat = require("dateformat");
 
-const relay = require('./device_controllers/relay')
-const led_strip = require('./device_controllers/led_strip')
+const relay = require("./device_controllers/relay");
+const led_strip = require("./device_controllers/led_strip");
 
-const alarms=require('./modules/alarms')
+const alarms = require("./modules/alarms");
 
 /*****MIDDLEWARE*****/
-  router.use(function middlewaretest(req, res, next) {
-  /*let ua = req.headers["user-agent"];
-  let location = geoip.allData(req.ip);
-  let time = dateformat(new Date(),"dd-mm-yyyy h:mm:ss")
-  let visitors = fs.readFileSync('visitors.txt');
-  if(!visitors.includes(req.ip))
-    fs.appendFileSync('visitors.txt', `[${time}] ${req.ip} from ${location.city}, ${location.country} using ${ua}\n`);*/
+router.use(function middlewaretest(req, res, next) {
+  let ua = req.headers["user-agent"];
+  let time = dateformat(new Date(), "dd-mm-yyyy h:mm:ss");
+  let visitors = fs.readFileSync("visitors.txt");
+  if (!visitors.includes(req.ip))
+    fs.appendFileSync("./visitors.txt", `[${time}] ${req.ip} using ${ua}\n`);
   next();
 });
 
@@ -31,7 +30,7 @@ router.post("/login", async function(req, res) {
   } else {
     req.session.loggedIn = true;
     req.session.authData = auth;
-    res.end(JSON.stringify(auth));
+    res.json(auth);
   }
 });
 
@@ -49,27 +48,27 @@ router.get("/logincheck", async function(req, res) {
 router.post("/setLedStrip", function(req, res) {
   /* if (!(req.session.authData && req.session.authData.permission_level > 2))
      res.end("0");*/
-   led_strip.setLedStrip(req.body.r, req.body.g, req.body.b);
-   res.end("ok");
- });
+  led_strip.setLedStrip(req.body.r, req.body.g, req.body.b);
+  res.end("ok");
+});
 
- router.get("/discoOn", function(req, res) {
+router.get("/discoOn", function(req, res) {
   /* if (!(req.session.authData && req.session.authData.permission_level > 2))
      res.end("0");*/
-   led_strip.hsvCycleStart();
-   res.end("ok");
- });
+  led_strip.hsvCycleStart();
+  res.end("ok");
+});
 
- router.get("/discoOff", function(req, res) {
+router.get("/discoOff", function(req, res) {
   /* if (!(req.session.authData && req.session.authData.permission_level > 2))
      res.end("0");*/
-   led_strip.hsvCycleStop();
-   res.end("ok");
- });
+  led_strip.hsvCycleStop();
+  res.end("ok");
+});
 
- /*****RELAY*****/
+/*****RELAY*****/
 router.get("/openDoor", function(req, res) {
- /* if (!(req.session.authData && req.session.authData.permission_level > 2))
+  /* if (!(req.session.authData && req.session.authData.permission_level > 2))
     res.end("0");*/
   relay.openDoor();
   res.end("ok");
@@ -103,10 +102,15 @@ router.get("/getAlarms", function(req, res) {
   res.json(alarms.getAlarms());
 });
 
-router.post("/setAlarm", function(req,res){
+router.post("/setAlarm", function(req, res) {
   let description = req.body.description;
   let time = req.body.time;
-  alarms.addAlarm(description,time);
+  if (alarms.addAlarm(description, time)) res.end("ok");
+  else res.end("exists");
+});
+
+router.post("/removeAlarm", function(req, res) {
+  alarms.removeAlarm(req.body.idx);
   res.end("ok");
 });
 

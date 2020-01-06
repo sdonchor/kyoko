@@ -3,10 +3,10 @@
   <v-container fluid fill-height>
     <v-row>
       <v-col lg="6">
-        <AlarmsList></AlarmsList>
+        <AlarmsList :alarmsrefreshsignal="alarmsRefresh" @refreshdone="refreshDone"></AlarmsList>
       </v-col>
       <v-col lg="6">
-        <NewAlarm></NewAlarm>
+        <NewAlarm @refreshalarms="refreshAlarms"></NewAlarm>
       </v-col>
     </v-row>
   </v-container>
@@ -23,9 +23,18 @@ export default {
     NewAlarm
   },
   data: function() {
-    return {};
+    return {
+      alarmsRefresh:false
+    };
   },
-  methods: {},
+  methods: {
+    refreshAlarms: function(){
+      this.alarmsRefresh=true;
+    },
+    refreshDone: function(){
+      this.alarmsRefresh=false;
+    }
+  },
   created() {},
   mounted() {}
 };

@@ -9,7 +9,7 @@
      <v-row justify="center">
       <v-time-picker class="mt-3" v-model="time" scrollable format="24hr"></v-time-picker>
       </v-row>
-      <v-btn class = "mt-5" color="primary" width="100%">
+      <v-btn class = "mt-5" color="primary" width="100%" @click.stop="setAlarm">
        <v-icon left>mdi-check</v-icon> Set alarm
       </v-btn>
     </div>
@@ -27,7 +27,23 @@ export default {
     };
   },
   methods: {
-
+    
+    setAlarm: function(){
+      axios.post('/api/setAlarm',{
+        description:this.description,
+        time:this.time
+      }).then((response)=>{
+        if(response.data==="ok")
+        {
+          this.$emit('refreshalarms');
+        }
+        else if(response.data==="exists")
+        {
+          Swal.fire('Alarm set to this time already exists.')
+        }
+        
+      })
+    }
   },
   created() {
   },
