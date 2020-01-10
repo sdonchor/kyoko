@@ -1,5 +1,6 @@
-let dbpath = "./src/backend/database/database.db";
+const dbpath = "./src/backend/database/database.db";
 
+const utils = require('../util/utils')
 const crypto = require("crypto");
 
 var sqlite3 = require("sqlite3");
@@ -11,7 +12,26 @@ var db = new sqlite3.Database(dbpath, (err)=>{
 });
 
 module.exports = {
-  auth: function(pw, session, session_id) {
+  getUserByPassword: function(pw) {
+    return new Promise((resolve,reject)=>{
+      let hash = utils.hash(pw);
+      db.get(`SELECT * FROM users WHERE pwhash='${hash}'`,(err,row)=>{
+        if(err){
+          reject(err);
+        }
+        else{
+          if(row) {
+            resolve(row);
+          }
+          else
+          {
+            resolve('0');
+          }
+        }
+      });
+    });
+  },
+ /* auth: function(pw, session, session_id) {
     return new Promise(function(resolve, reject) {
       hash = crypto
         .createHash("sha256")
@@ -38,7 +58,7 @@ module.exports = {
         }
       });
     });
-  },
+  },*/
   tokenAuth: function(token) {
     return new Promise(function(resolve, reject) {
       db.get(`SELECT * FROM tokens WHERE token='${token}'`, (err, row) => {

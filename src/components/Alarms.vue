@@ -1,15 +1,18 @@
 <template>
-<div>
-  <v-container fluid fill-height>
-    <v-row>
-      <v-col lg="6">
-        <AlarmsList :alarmsrefreshsignal="alarmsRefresh" @refreshdone="refreshDone"></AlarmsList>
-      </v-col>
-      <v-col lg="6">
-        <NewAlarm @refreshalarms="refreshAlarms"></NewAlarm>
-      </v-col>
-    </v-row>
-  </v-container>
+  <div>
+    <v-container fluid fill-height>
+      <v-row>
+        <v-col lg="6">
+          <NewAlarm @refreshalarms="refreshAlarms"></NewAlarm>
+        </v-col>
+        <v-col lg="6">
+          <AlarmsList
+            :alarmsrefreshsignal="alarmsRefresh"
+            @refreshdone="refreshDone"
+          ></AlarmsList>
+        </v-col>
+      </v-row>
+    </v-container>
   </div>
 </template>
 
@@ -24,15 +27,15 @@ export default {
   },
   data: function() {
     return {
-      alarmsRefresh:false
+      alarmsRefresh: false
     };
   },
   methods: {
-    refreshAlarms: function(){
-      this.alarmsRefresh=true;
+    refreshAlarms: function() {
+      this.alarmsRefresh = true;
     },
-    refreshDone: function(){
-      this.alarmsRefresh=false;
+    refreshDone: function() {
+      this.alarmsRefresh = false;
     }
   },
   created() {},

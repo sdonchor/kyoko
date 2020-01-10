@@ -24,6 +24,15 @@ module.exports = {
     {
         this.constantBeep();
     }
+    else if(mode==="single")
+    {
+      param = param===5 ? 1000 : param; //if default set to 1 ms
+      buzzer.writeSync(1);
+      setTimeout(()=>{
+        buzzer.writeSync(0);
+      },param)
+
+    }
   },
   beepBeep: function(n, curr) {
     if (stopsignal == true) {

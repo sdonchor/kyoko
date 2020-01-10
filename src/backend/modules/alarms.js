@@ -7,8 +7,7 @@ const ringAlarm = (time)=>{
   let active = alarms.filter((x)=>{
     return x.time === time;
   })
-  active.forEach(x => {
-    let idx = alarms.indexOf(x);
+  active.forEach((x,idx) => {
     alarms.splice(idx,1);
   });
    

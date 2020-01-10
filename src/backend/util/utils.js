@@ -1,4 +1,12 @@
+const crypto = require('crypto');
+
 module.exports = {
+  hash: function(pw){
+    return crypto
+      .createHash("sha256")
+      .update(pw)
+      .digest("hex");
+  },
   randomInt: function(min, max) {
     return Math.floor(Math.random() * (max - min)) + min;
   },

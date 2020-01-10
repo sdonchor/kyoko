@@ -11,6 +11,7 @@ const dht11 = require('./dht11')
 const rpi = require('./rpi')
 const buzzer = require('./buzzer')
 const led_strip = require('./led_strip')
+const door_sensor = require('./door_sensor')
 
 /******************/
 
