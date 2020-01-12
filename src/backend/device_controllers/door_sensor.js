@@ -14,7 +14,7 @@ doorSensor.watch((err, value) => {
             if(value===0)
             {
                 console.log('door opened');
-                buzzer.startBeep('single',1500)
+                //buzzer.startBeep('single',1500)
             }
             else if(value===1)
             {

@@ -7,3 +7,7 @@
 [09-01-2020 4:01:28] 37.47.65.61 using Tasker/5.8.5 (Android/8.0.0)
 [10-01-2020 2:01:33] 213.76.46.82 using Tasker/5.8.5 (Android/8.0.0)
 [10-01-2020 5:01:31] 192.168.1.10 using Mozilla/5.0 (Linux; Android 8.0.0; MI 5s Plus) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.62 Mobile Safari/537.36
+[10-01-2020 2:01:50] 37.47.105.56 using HttpShortcuts/1.24.2 (Linux; U; Android 7.0; Redmi Note 4 MIUI/V11.0.2.0.NCFMIXM)
+[11-01-2020 12:01:22] 185.151.116.35 using Mozilla/5.0 (Linux; Android 8.0.0; MI 5s Plus) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.62 Mobile Safari/537.36
+[12-01-2020 4:01:36] 37.47.79.56 using HttpShortcuts/1.24.2 (Linux; U; Android 7.0; Redmi Note 4 MIUI/V11.0.2.0.NCFMIXM)
+[12-01-2020 4:01:18] 192.168.1.14 using Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:71.0) Gecko/20100101 Firefox/71.0

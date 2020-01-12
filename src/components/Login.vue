@@ -1,20 +1,19 @@
 <template>
   <div>
-    <v-container>
-      <form>
-
-      </form>
+    <v-container fluid fill-height>
+      <LoginForm></LoginForm>
     </v-container>
   </div>
 </template>
 
 <script>
-import {mapGetters} from 'vuex'
+//import {mapGetters} from 'vuex'
+import LoginForm from './cards/LoginForm.vue'
 export default {
   components:{
-    Temperature
+    LoginForm
   },
-  name: "Home",
+  name: "Login",
   data: function() {
     return {};
   },

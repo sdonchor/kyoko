@@ -1,14 +1,15 @@
 const express = require("express");
-const router = express.Router();
-const db = require("./database/database_handler");
-const deviceControler = require("./device_controllers/devices");
 const fs = require("fs");
 const dateformat = require("dateformat");
 
+const usermanager = require("./modules/user_management");
+const db = require("./database/database_handler");
+const deviceControler = require("./device_controllers/devices");
 const relay = require("./device_controllers/relay");
 const led_strip = require("./device_controllers/led_strip");
-
 const alarms = require("./modules/alarms");
+
+const router = express.Router();
 
 /*****MIDDLEWARE*****/
 router.use(function middlewaretest(req, res, next) {
@@ -22,19 +23,19 @@ router.use(function middlewaretest(req, res, next) {
 
 /*****AUTHORIZATION*****/
 router.post("/login", async function(req, res) {
-  let auth = await db.auth(req.body.password, req.session, req.sessionID);
-  if (!auth) {
+  let authdata = await usermanager.logIn(req.body.password);
+  if (authdata === 0) {
     res.end("0");
-  } else if (auth === "inactive") {
+  }
+  else if(authdata==="inactive")
+  {
     res.end("inactive");
   } else {
-    req.session.loggedIn = true;
-    req.session.authData = auth;
-    res.json(auth);
+    res.json(authdata);
   }
 });
 
-router.get("/logincheck", async function(req, res) {
+router.get("/login", async function(req, res) {
   if (req.session.loggedIn && req.session.authData) {
     res.end(JSON.stringify(req.session.authData));
   } else {
@@ -46,30 +47,22 @@ router.get("/logincheck", async function(req, res) {
 
 /*****LED STRIP*****/
 router.post("/setLedStrip", function(req, res) {
-  /* if (!(req.session.authData && req.session.authData.permission_level > 2))
-     res.end("0");*/
   led_strip.setLedStrip(req.body.r, req.body.g, req.body.b);
   res.end("ok");
 });
 
 router.get("/discoOn", function(req, res) {
-  /* if (!(req.session.authData && req.session.authData.permission_level > 2))
-     res.end("0");*/
   led_strip.hsvCycleStart();
   res.end("ok");
 });
 
 router.get("/discoOff", function(req, res) {
-  /* if (!(req.session.authData && req.session.authData.permission_level > 2))
-     res.end("0");*/
   led_strip.hsvCycleStop();
   res.end("ok");
 });
 
 /*****RELAY*****/
 router.get("/openDoor", function(req, res) {
-  /* if (!(req.session.authData && req.session.authData.permission_level > 2))
-    res.end("0");*/
   relay.openDoor();
   res.end("ok");
 });

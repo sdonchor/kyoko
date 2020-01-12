@@ -20,12 +20,16 @@ module.exports = {
           reject(err);
         }
         else{
-          if(row) {
+          if(row && row.active===0)
+          {
+            resolve("inactive");
+          }
+          else if(row) {
             resolve(row);
           }
           else
           {
-            resolve('0');
+            resolve(false);
           }
         }
       });

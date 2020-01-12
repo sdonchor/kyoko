@@ -15,7 +15,7 @@ const actions = {
           .then(response => {
             if (response.data === "inactive") {
               Swal.fire({
-                type: "error",
+                icon: "error",
                 text: "Konto nieaktywne."
               });
               return;
@@ -24,14 +24,14 @@ const actions = {
               this.logged_in = true;
               state.commit('setAuthdata',response.data); ////
               Swal.fire({
-                type: "success",
-                text: `Zalogowano jako ${response.data.user}.`,
+                icon: "success",
+                text: `Zalogowano jako ${response.data.name}.`,
                 showConfirmButton: false,
                 timer: 1200
               });
             } else {
               Swal.fire({
-                type: "error",
+                icon: "error",
                 text: "Nie udało się zalogować."
               });
             }
