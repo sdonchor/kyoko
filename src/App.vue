@@ -1,12 +1,7 @@
 <template>
- <v-app id="inspire">
-    <v-navigation-drawer
-      v-model="drawer"
-      app
-      clipped
-    >
+  <v-app id="inspire">
+    <v-navigation-drawer v-model="drawer" app clipped>
       <v-list dense>
-
         <v-list-item to="/">
           <v-list-item-action>
             <v-icon>mdi-home</v-icon>
@@ -51,69 +46,109 @@
             <v-list-item-title>Configuration</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-
       </v-list>
+
+      <template v-slot:append v-if="loggedIn">
+        <div class="pa-2">
+          <v-btn block color="error" @click.stop="logOut"
+            ><v-icon left>mdi-logout</v-icon>Log out</v-btn
+          >
+        </div>
+      </template>
     </v-navigation-drawer>
 
-    <v-app-bar
-      app
-      clipped-left
-      color="primary"
-    >
+    <v-app-bar app clipped-left color="primary">
       <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
-      <v-img class="mx-3" contain height="50px" :src="require('@/assets/logo.png')"></v-img>
-      
+      <v-img
+        class="mx-3"
+        contain
+        height="50px"
+        :src="require('@/assets/logo.png')"
+      ></v-img>
     </v-app-bar>
 
     <v-content>
-      <v-container
-        fluid
-        fill-height
-      >
-        <v-layout
-          align-center
-          justify-center
-        >
-          <v-flex>
-            <router-view/>
+      <v-container fluid fill-height>
+        <v-layout align-center justify-center>
+          <v-flex v-if="loggedIn">
+            <router-view />
+          </v-flex>
+          <v-flex v-else>
+            <div class="loginform">
+              <LoginForm width="500px"></LoginForm>
+            </div>
           </v-flex>
         </v-layout>
       </v-container>
     </v-content>
 
-    <v-footer app color = "secondary">
- 
-        <v-card flat>
-          <span>&copy; 2019</span>
-        </v-card>
-        <v-spacer></v-spacer>
-        <v-card flat>
-          <a href='mailto:sdonchor@gmail.com'>sdonchor@gmail.com</a>
-        </v-card>
-    
-      
+    <v-footer app color="secondary">
+      <v-card flat>
+        <span>&copy; 2019</span>
+      </v-card>
+      <v-spacer></v-spacer>
+      <v-card flat>
+        <a href="mailto:sdonchor@gmail.com">sdonchor@gmail.com</a>
+      </v-card>
     </v-footer>
   </v-app>
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex'
+let loginCheckInterval = null;
+import { mapGetters, mapActions } from "vuex";
+import LoginForm from "./components/cards/LoginForm.vue";
 export default {
-  name: 'App',
+  name: "App",
 
   components: {
-    
+    LoginForm
   },
   methods: {
     ...mapActions(),
+    loginCheck: function() {
+      axios.get("/api/login").then(response => {
+        let auth = null;
+        if (response.data != 0) {
+          auth = response.data;
+        }
+        this.$store.dispatch("updateAuthdata", auth);
+      });
+    },
+    logOut: function() {
+      this.$store.dispatch("logOut");
+    }
   },
   data: () => ({
-    drawer:null
+    drawer: null
   }),
   created: function() {
-    this.$vuetify.theme.dark=true;
-    
+    this.$vuetify.theme.dark = true;
   },
-  computed: mapGetters(['getAuthdata'])
+  computed: {
+    loggedIn: function() {
+      if (this.$store.state.login.authdata) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  },
+  mounted: function() {
+    loginCheckInterval = setInterval(() => {}, 10000);
+    //
+    this.$store.dispatch("checkCookies");
+    //
+  }
 };
 </script>
+<style src=''>
+
+</style>
+<style scoped>
+.loginform{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+</style>

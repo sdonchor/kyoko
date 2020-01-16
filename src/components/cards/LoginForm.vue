@@ -1,9 +1,9 @@
 <template>
-  <v-card class="pa-2" outlined tile>
-    <v-form>
+  <v-card class="pa-2 text-center" outlined tile :max-width="width"  >
+    <v-form v-on:submit.prevent="logIn">
       <v-text-field label="Password" type="password" v-model="password">
       </v-text-field>
-      <v-btn color="primary" @click.stop="logIn">Log in</v-btn>
+      <v-btn color="primary" @click.stop="logIn"><v-icon left>mdi-login</v-icon>Log in</v-btn>
     </v-form>
   </v-card>
 </template>
@@ -11,6 +11,7 @@
 <script>
 export default {
   name: "LoginForm",
+  props: ['width'],
   data: function() {
     return {
       password: null
@@ -19,6 +20,7 @@ export default {
   methods: {
     logIn: function() {
       this.$store.dispatch('logIn',this.password);
+      
     }
   },
   created() {},

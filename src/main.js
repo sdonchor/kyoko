@@ -5,6 +5,7 @@ import store from './store'
 import vuetify from './plugins/vuetify';
 import axios from 'axios'
 import Swal from 'sweetalert2'
+import VueCookies from 'vue-cookies'
 Vue.config.productionTip = false
 window.axios = axios;
 window.Swal = Swal;
@@ -15,3 +16,4 @@ new Vue({
   vuetify,
   render: h => h(App)
 }).$mount('#app')
+Vue.use(VueCookies);

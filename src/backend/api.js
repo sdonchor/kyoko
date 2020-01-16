@@ -3,6 +3,7 @@ const fs = require("fs");
 const dateformat = require("dateformat");
 
 const usermanager = require("./modules/user_management");
+const cookiemanager = require("./modules/cookies_management");
 const db = require("./database/database_handler");
 const deviceControler = require("./device_controllers/devices");
 const relay = require("./device_controllers/relay");
@@ -25,24 +26,40 @@ router.use(function middlewaretest(req, res, next) {
 router.post("/login", async function(req, res) {
   let authdata = await usermanager.logIn(req.body.password);
   if (authdata === 0) {
+    cookiemanager.sendLogoutCookies(res);
+
     res.end("0");
-  }
-  else if(authdata==="inactive")
-  {
+  } else if (authdata === "inactive") {
+    cookiemanager.sendLogoutCookies(res);
+
     res.end("inactive");
-  } else {
-    res.json(authdata);
+  } else {   //TODO sync vuex and cookies
+    cookiemanager.sendLoginCookies(res, authdata);
+    req.session.loggedIn = true;
+    req.session.authdata = authdata;
+    let client_authdata={
+      id: authdata.id,
+      name: authdata.name,
+      permissions: authdata.permissions
+    };
+    res.json(client_authdata);
   }
 });
 
 router.get("/login", async function(req, res) {
-  if (req.session.loggedIn && req.session.authData) {
-    res.end(JSON.stringify(req.session.authData));
+  if (req.session.loggedIn && req.session.authdata) {
+    res.json(req.session.authdata);
   } else {
-    let fail = {};
-    fail.error = "no current session";
-    res.end(JSON.stringify(fail));
+    cookiemanager.sendLogoutCookies(res);
+    res.end('0');
   }
+});
+
+router.get("/logout", async function(req, res) {
+  cookiemanager.sendLogoutCookies(res);
+  req.session.loggedIn=false;
+  req.session.authdata=null;
+  res.end('ok');
 });
 
 /*****LED STRIP*****/

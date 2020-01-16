@@ -1,7 +1,6 @@
 <template>
   <div>
-    <v-container fluid fill-height>
-      <div v-if="authdata">
+   
         <v-row>
           <v-col lg="6" overflow="hidden">
             <Temperature></Temperature>
@@ -16,11 +15,8 @@
           </v-col>
           <v-col lg="6"> </v-col>
         </v-row>
-      </div>
-      <div v-else>
-        <LoginForm></LoginForm>
-      </div>
-    </v-container>
+      
+   
   </div>
 </template>
 
