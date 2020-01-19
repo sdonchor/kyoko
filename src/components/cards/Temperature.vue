@@ -1,7 +1,7 @@
 <template>
   <v-card class="pa-2 scroll" outlined tile>
     <v-card-title>
-      Right now:
+      Inside:
     </v-card-title>
     <v-simple-table class="temptable">
       <tbody>

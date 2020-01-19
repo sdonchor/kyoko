@@ -3,18 +3,24 @@
    
         <v-row>
           <v-col lg="6" overflow="hidden">
-            <Temperature></Temperature>
+           
+            <Weather></Weather>
           </v-col>
           <v-col lg="6">
-            <OpenDoor></OpenDoor>
+             <Temperature></Temperature>
+             <OpenDoor class="mt-5"></OpenDoor>
           </v-col>
         </v-row>
         <v-row>
           <v-col lg="6">
             <LedColorPicker></LedColorPicker>
           </v-col>
-          <v-col lg="6"> </v-col>
+          <v-col lg="6"> 
+
+            
+          </v-col>
         </v-row>
+
       
    
   </div>
@@ -25,12 +31,14 @@ import Temperature from "./cards/Temperature.vue";
 import OpenDoor from "./cards/OpenDoor.vue";
 import LedColorPicker from "./cards/LedColorPicker.vue";
 import LoginForm from "./cards/LoginForm.vue";
+import Weather from "./cards/Weather.vue";
 export default {
   components: {
     Temperature,
     OpenDoor,
     LedColorPicker,
-    LoginForm
+    LoginForm,
+    Weather
   },
   name: "Home",
   data: function() {

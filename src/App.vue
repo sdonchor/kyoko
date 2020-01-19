@@ -47,6 +47,15 @@
           </v-list-item-content>
         </v-list-item>
 
+        <v-list-item to="/logs" v-if="checkPerms(8)">
+          <v-list-item-action>
+            <v-icon>mdi-archive</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>Logs</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+
         <v-list-item to="/config" v-if="checkPerms(10)">
           <v-list-item-action>
             <v-icon>mdi-settings</v-icon>

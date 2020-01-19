@@ -6,6 +6,7 @@
     <v-card
       color="primary"
       :key="idx + 'msg'"
+      class="ma-2"
       v-for="(message, idx) in messages"
     >
       <v-card-title>
@@ -38,29 +39,17 @@ export default {
       axios
         .get("/api/messages")
         .then(response => {
-          this.messages = [];
-          response.data.forEach(msg => {
-            
-          });
           this.messages = response.data;
-          this.$emit("refreshdone");
         })
         .catch(err => {
           console.log(err);
         });
     },
-    getUser: function(id) {
-      return new Promise(function(resolve, reject) {
-        axios.get("/api/user/id").then(response => {
-          resolve(response.data);
-        });
-      });
-    },
     removeMessage: function(idx) {
       axios
         .delete(`/api/messages/${idx}`)
         .then(response => {
-          this.getMessages();
+          this.messages=response.data;
         });
     }
   },

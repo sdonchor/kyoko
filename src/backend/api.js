@@ -10,13 +10,14 @@ const relay = require("./device_controllers/relay");
 const led_strip = require("./device_controllers/led_strip");
 const alarms = require("./modules/alarms");
 const messageboard = require("./modules/messageboard");
+const weather = require('./modules/weather');
 
 const router = express.Router();
 
 /*****MIDDLEWARE*****/
 router.use(function middlewaretest(req, res, next) {
   let ua = req.headers["user-agent"];
-  let time = dateformat(new Date(), "dd-mm-yyyy h:mm:ss");
+  let time = dateformat(new Date(), "dd-mm-yyyy HH:MM:ss");
   let visitors = fs.readFileSync("visitors.txt");
   if (!visitors.includes(req.ip))
     fs.appendFileSync("./visitors.txt", `[${time}] ${req.ip} using ${ua}\n`);
@@ -156,7 +157,7 @@ router.post("/messages",permsCheck(5),function(req,res){
   let status= messageboard.addMessage(message);
   if(status)
   {
-    res.end('1');
+    res.json(status);
   }
   else
   {
@@ -168,11 +169,17 @@ router.delete("/messages/:id(\\d+)",permsCheck(5),function(req,res){ //FIXME
   console.log(req.query.id);
   if(status)
   {
-    res.end('1');
+    res.json(status);
   }
   else
   {
     res.end('0');
   }
 });
+
+/*****WEATHER*****/
+router.get('/weather',function(req,res){
+  res.json(weather.getWeather());
+})
+
 module.exports = router;

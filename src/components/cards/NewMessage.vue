@@ -32,7 +32,7 @@ export default {
         axios.post('/api/messages',{
           content: this.content
         }).then((response)=>{
-          if(response==1)
+          if(response!=0)
           {
             this.content = null;
             this.$emit('refreshmessages');
