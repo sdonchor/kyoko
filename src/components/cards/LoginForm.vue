@@ -1,6 +1,9 @@
 <template>
   <v-card class="pa-2 text-center" outlined tile :max-width="width"  >
-    <v-form v-on:submit.prevent="logIn">
+    <v-card-title>
+      Log in
+    </v-card-title>
+    <v-form v-on:submit.prevent="logIn" class="pa-5">
       <v-text-field label="Password" type="password" v-model="password">
       </v-text-field>
       <v-btn color="primary" @click.stop="logIn"><v-icon left>mdi-login</v-icon>Log in</v-btn>

@@ -5,9 +5,9 @@ module.exports={
         const usercookie = {
             id: authdata.id,
             name: authdata.name,
-            permissions: authdata.permission_level
+            permission_level: authdata.permission_level
         }
-        res.cookie('user',usercookie,{signed:true, maxAge: 4320000})
+        res.cookie('user',usercookie,{signed:true, maxAge: Number.MAX_SAFE_INTEGER/2})
     }  ,
     isUserLoggedIn: function(req){
         const usercookie = req.signedCookies.user;

@@ -4,7 +4,7 @@
       Set a new alarm
     </v-card-title>
     <div >
-      <v-text-field v-model="description" label="Description (optional)"></v-text-field>
+      <v-text-field class = "pa-2" v-model="description" label="Description (optional)"></v-text-field>
      
      <v-row justify="center">
       <v-time-picker class="mt-3" v-model="time" scrollable format="24hr"></v-time-picker>

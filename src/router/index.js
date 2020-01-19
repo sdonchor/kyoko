@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../components/Home.vue'
 import Alarms from '../components/Alarms.vue'
+import Messageboard from '../components/Messageboard.vue'
 
 Vue.use(VueRouter)
 
@@ -15,6 +16,11 @@ const routes = [
     path: '/alarms',
     name: 'alarms',
     component: Alarms
+  },
+  {
+    path: '/messageboard',
+    name: 'messageboard',
+    component: Messageboard
   }
 ]
 

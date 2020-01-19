@@ -9,6 +9,7 @@ const deviceControler = require("./device_controllers/devices");
 const relay = require("./device_controllers/relay");
 const led_strip = require("./device_controllers/led_strip");
 const alarms = require("./modules/alarms");
+const messageboard = require("./modules/messageboard");
 
 const router = express.Router();
 
@@ -22,6 +23,8 @@ router.use(function middlewaretest(req, res, next) {
   next();
 });
 
+const permsCheck = usermanager.permsCheck;
+
 /*****AUTHORIZATION*****/
 router.post("/login", async function(req, res) {
   let authdata = await usermanager.logIn(req.body.password);
@@ -33,53 +36,68 @@ router.post("/login", async function(req, res) {
     cookiemanager.sendLogoutCookies(res);
 
     res.end("inactive");
-  } else {   //TODO sync vuex and cookies
+  } else { 
     cookiemanager.sendLoginCookies(res, authdata);
-    req.session.loggedIn = true;
-    req.session.authdata = authdata;
     let client_authdata={
       id: authdata.id,
       name: authdata.name,
-      permissions: authdata.permissions
+      permission_level: authdata.permission_level
     };
     res.json(client_authdata);
   }
 });
 
 router.get("/login", async function(req, res) {
-  if (req.session.loggedIn && req.session.authdata) {
-    res.json(req.session.authdata);
-  } else {
-    cookiemanager.sendLogoutCookies(res);
-    res.end('0');
+  let user = req.signedCookies.user;
+  if(user)
+  {
+    let active = await db.isUserActive(user.id);
+    if(active){
+      res.json(user);
+    }
+    else
+    {
+      cookiemanager.sendLogoutCookies(res);
+
+    }
   }
 });
 
 router.get("/logout", async function(req, res) {
   cookiemanager.sendLogoutCookies(res);
-  req.session.loggedIn=false;
-  req.session.authdata=null;
   res.end('ok');
 });
 
+
+/*****USER MANAGEMENT*****/
+router.get("/users",permsCheck(3),async function(req,res){
+  let users = await db.getAllUsers();
+  res.json(users);
+});
+
+router.get("/users/:id(\\d+)",permsCheck(3),async function(req,res){
+  let user = await db.getUserById(req.params.id);
+  res.json(user);
+});
+
 /*****LED STRIP*****/
-router.post("/setLedStrip", function(req, res) {
+router.post("/setLedStrip",permsCheck(5), function(req, res) {
   led_strip.setLedStrip(req.body.r, req.body.g, req.body.b);
   res.end("ok");
 });
 
-router.get("/discoOn", function(req, res) {
+router.get("/discoOn",permsCheck(5), function(req, res) {
   led_strip.hsvCycleStart();
   res.end("ok");
 });
 
-router.get("/discoOff", function(req, res) {
+router.get("/discoOff",permsCheck(5), function(req, res) {
   led_strip.hsvCycleStop();
   res.end("ok");
 });
 
 /*****RELAY*****/
-router.get("/openDoor", function(req, res) {
+router.get("/openDoor",permsCheck(2), function(req, res) {
   relay.openDoor();
   res.end("ok");
 });
@@ -97,31 +115,64 @@ router.get("/openDoorToken", async function(req, res) {
 });
 
 /*****SENSOR DATA*****/
-router.get("/getDHT11Reading", async function(req, res) {
+router.get("/getDHT11Reading",permsCheck(0), async function(req, res) {
   let json = fs.readFileSync("./src/backend/readings/dht11.json");
   res.end(json);
 });
 
-router.get("/getRpiTemp", async function(req, res) {
+router.get("/getRpiTemp",permsCheck(0), async function(req, res) {
   let json = fs.readFileSync("./src/backend/readings/rpi_temp.json");
   res.end(json);
 });
 
 /*****ALARMS*****/
-router.get("/getAlarms", function(req, res) {
+router.get("/getAlarms",permsCheck(5), function(req, res) {
   res.json(alarms.getAlarms());
 });
 
-router.post("/setAlarm", function(req, res) {
+router.post("/setAlarm",permsCheck(5), function(req, res) {
   let description = req.body.description;
   let time = req.body.time;
   if (alarms.addAlarm(description, time)) res.end("ok");
   else res.end("exists");
 });
 
-router.post("/removeAlarm", function(req, res) {
+router.post("/removeAlarm", permsCheck(5), function(req, res) {
   alarms.removeAlarm(req.body.idx);
   res.end("ok");
 });
 
+/*****MESSAGEBOARD*****/
+router.get("/messages",permsCheck(4), async function(req,res){
+  let messages = await messageboard.getMessages();
+  res.json(messages);
+});
+router.post("/messages",permsCheck(5),function(req,res){
+  const id  = req.signedCookies.user.id;
+  let message = {
+    content: req.body.content,
+    author: id
+  }
+  let status= messageboard.addMessage(message);
+  if(status)
+  {
+    res.end('1');
+  }
+  else
+  {
+    res.end('0');
+  }
+});
+router.delete("/messages/:id(\\d+)",permsCheck(5),function(req,res){ //FIXME
+  let status = messageboard.removeMessage(req.query.id);
+  console.log(req.query.id);
+  if(status)
+  {
+    res.end('1');
+  }
+  else
+  {
+    res.end('0');
+  }
+});
 module.exports = router;

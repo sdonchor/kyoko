@@ -10,5 +10,23 @@ module.exports={
         } else {
             return auth;
         }
+    },
+    permsCheck(required){
+        return function(req,res,next)
+        {
+            if(req.signedCookies.user && req.signedCookies.user.permission_level>=required)
+            {
+                next();
+            }
+            else
+            {
+                res.end('0');
+            }
+        }
+        
+    },
+    async getUserById(id){
+        let user = await db.getUserById(id);
+        return user;
     }
 }

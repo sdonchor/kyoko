@@ -11,7 +11,16 @@
           </v-list-item-content>
         </v-list-item>
 
-        <v-list-item to="/alarms">
+        <v-list-item to="/messageboard"  v-if="checkPerms(4)">
+          <v-list-item-action>
+            <v-icon>mdi-forum</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>Messageboard</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+
+        <v-list-item to="/alarms"  v-if="checkPerms(5)">
           <v-list-item-action>
             <v-icon>mdi-alarm</v-icon>
           </v-list-item-action>
@@ -20,7 +29,7 @@
           </v-list-item-content>
         </v-list-item>
 
-        <v-list-item to="/control">
+        <v-list-item to="/control"  v-if="checkPerms(5)">
           <v-list-item-action>
             <v-icon>mdi-tune</v-icon>
           </v-list-item-action>
@@ -29,7 +38,7 @@
           </v-list-item-content>
         </v-list-item>
 
-        <v-list-item to="/readings">
+        <v-list-item to="/readings" v-if="checkPerms(1)">
           <v-list-item-action>
             <v-icon>mdi-chart-line</v-icon>
           </v-list-item-action>
@@ -38,7 +47,7 @@
           </v-list-item-content>
         </v-list-item>
 
-        <v-list-item to="/config">
+        <v-list-item to="/config" v-if="checkPerms(10)">
           <v-list-item-action>
             <v-icon>mdi-settings</v-icon>
           </v-list-item-action>
@@ -48,7 +57,7 @@
         </v-list-item>
       </v-list>
 
-      <template v-slot:append v-if="loggedIn">
+      <template v-slot:append v-if="checkPerms(0)">
         <div class="pa-2">
           <v-btn block color="error" @click.stop="logOut"
             ><v-icon left>mdi-logout</v-icon>Log out</v-btn
@@ -59,10 +68,9 @@
 
     <v-app-bar app clipped-left color="primary">
       <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
-      <v-img
-        class="mx-3"
+      <img
+        class="logocentered"
         contain
-        height="50px"
         :src="require('@/assets/logo.png')"
       ></v-img>
     </v-app-bar>
@@ -70,7 +78,7 @@
     <v-content>
       <v-container fluid fill-height>
         <v-layout align-center justify-center>
-          <v-flex v-if="loggedIn">
+          <v-flex v-if="checkPerms(0)">
             <router-view />
           </v-flex>
           <v-flex v-else>
@@ -96,7 +104,7 @@
 
 <script>
 let loginCheckInterval = null;
-import { mapGetters, mapActions } from "vuex";
+
 import LoginForm from "./components/cards/LoginForm.vue";
 export default {
   name: "App",
@@ -105,7 +113,6 @@ export default {
     LoginForm
   },
   methods: {
-    ...mapActions(),
     loginCheck: function() {
       axios.get("/api/login").then(response => {
         let auth = null;
@@ -117,6 +124,16 @@ export default {
     },
     logOut: function() {
       this.$store.dispatch("logOut");
+    },
+    checkPerms: function(required){
+      if(this.$store.state.login.authdata)
+      {
+        if(this.$store.state.login.authdata.permission_level>=required)
+        {
+          return true;
+        }
+      }
+      return false;
     }
   },
   data: () => ({
@@ -126,13 +143,7 @@ export default {
     this.$vuetify.theme.dark = true;
   },
   computed: {
-    loggedIn: function() {
-      if (this.$store.state.login.authdata) {
-        return true;
-      } else {
-        return false;
-      }
-    }
+    
   },
   mounted: function() {
     loginCheckInterval = setInterval(() => {}, 10000);
@@ -142,13 +153,15 @@ export default {
   }
 };
 </script>
-<style src=''>
-
-</style>
 <style scoped>
 .loginform{
   display:flex;
   align-items:center;
   justify-content:center;
+}
+.logocentered{
+
+  width: 160px;
+  height: auto;
 }
 </style>
