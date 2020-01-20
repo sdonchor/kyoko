@@ -109,9 +109,11 @@ module.exports = {
   removeMessage: function(id) {
     return new Promise(function(resolve,reject){
       db.run(
-        `UPDATE messages SET active=0 WHERE id=${id}`,(err)=>{
+        `UPDATE messages SET active=0 WHERE id=${id}`,async (err)=>{
           if(err) resolve(false);
-          else resolve(true);
+          else{
+            resolve(true);
+          }
         }
       )
     })

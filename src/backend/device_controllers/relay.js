@@ -1,17 +1,26 @@
 const Gpio = require("onoff").Gpio;
 
-
 const buzzer = require("./buzzer");
-const relay_ins1 = new Gpio(2, "high", { reconfigureDirection: false });
 
-
+const ins = [new Gpio(2, "high", { reconfigureDirection: false }), null, null];
 
 module.exports = {
+  switch: function(id) {
+    let status = ins[id-1].readSync();
+    if(status==0)
+    {
+      ins[id-1].writeSync(1);
+    }
+    else
+    {
+      ins[id-1].writeSync(0);
+    }
+  },
   openDoor: function() {
-    relay_ins1.writeSync(0);
+    ins[0].writeSync(0);
     buzzer.startBeep("repeat", 5);
     setTimeout(function() {
-      relay_ins1.writeSync(1);
+      ins[0].writeSync(1);
     }, 1500);
   }
 };

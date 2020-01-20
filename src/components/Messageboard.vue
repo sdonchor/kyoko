@@ -2,16 +2,19 @@
   <div>
     <v-container fluid fill-height>
       <v-row>
-        <v-col lg="6">
+        <v-col lg="12">
+          <NewMessage @refreshmessages="refreshMessages"></NewMessage>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col lg="12">
           <MessagesList
             :messagesrefreshsignal="messagesRefresh"
             @refreshdone="refreshDone"
           ></MessagesList>
         </v-col>
-        <v-col lg="6">
-          <NewMessage @refreshmessages="refreshMessages"></NewMessage>
-        </v-col>
-      </v-row>
+        </v-row>
+        
     </v-container>
   </div>
 </template>

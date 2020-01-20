@@ -4,11 +4,12 @@
       Add a message
     </v-card-title>
     <div>
-      <v-text-field
+      <v-textarea
+      outlined
         class="pa-2"
         v-model="content"
         label="Message"
-      ></v-text-field>
+      ></v-textarea>
 
       <v-btn class="mt-5" color="primary" width="100%" @click.stop="addMessage">
         <v-icon left>mdi-check</v-icon> Post message
@@ -50,4 +51,8 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.textarea{
+  white-space:pre-wrap;
+}
+</style>

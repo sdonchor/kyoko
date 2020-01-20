@@ -8,6 +8,7 @@ const db = require("./database/database_handler");
 const deviceControler = require("./device_controllers/devices");
 const relay = require("./device_controllers/relay");
 const led_strip = require("./device_controllers/led_strip");
+const door_sensor = require("./device_controllers/door_sensor");
 const alarms = require("./modules/alarms");
 const messageboard = require("./modules/messageboard");
 const weather = require('./modules/weather');
@@ -98,6 +99,11 @@ router.get("/discoOff",permsCheck(5), function(req, res) {
 });
 
 /*****RELAY*****/
+router.get("/switchRelay/:id",permsCheck(5), function(req,res){
+  relay.switch(req.params.id)
+  res.end("ok");
+});
+
 router.get("/openDoor",permsCheck(2), function(req, res) {
   relay.openDoor();
   res.end("ok");
@@ -124,6 +130,11 @@ router.get("/getDHT11Reading",permsCheck(0), async function(req, res) {
 router.get("/getRpiTemp",permsCheck(0), async function(req, res) {
   let json = fs.readFileSync("./src/backend/readings/rpi_temp.json");
   res.end(json);
+});
+
+router.get("/doorStatus",permsCheck(0), function(req,res){
+  let status = door_sensor.isDoorOpen();
+  res.end(status?'1':'0');
 });
 
 /*****ALARMS*****/
@@ -164,9 +175,8 @@ router.post("/messages",permsCheck(5),function(req,res){
     res.end('0');
   }
 });
-router.delete("/messages/:id(\\d+)",permsCheck(5),function(req,res){ //FIXME
-  let status = messageboard.removeMessage(req.query.id);
-  console.log(req.query.id);
+router.delete("/messages/:id(\\d+)",permsCheck(5),function(req,res){ 
+  let status = messageboard.removeMessage(req.params.id);
   if(status)
   {
     res.json(status);
@@ -178,7 +188,7 @@ router.delete("/messages/:id(\\d+)",permsCheck(5),function(req,res){ //FIXME
 });
 
 /*****WEATHER*****/
-router.get('/weather',function(req,res){
+router.get('/weather',permsCheck(0),function(req,res){
   res.json(weather.getWeather());
 })
 

@@ -16,12 +16,14 @@ const ringAlarm = (time)=>{
 
 module.exports = {
   addAlarm: function(description, time) {
+    let exists = false;
     alarms.forEach(x => {
       if(x.time==time)
       {
-        return false; //FIXME duplicate detection
+        exists=true;
       }
     });
+    if(exists) return false;
     let ms = utils.msTillTime(time);
     let alarm = {description, time, timeout: setTimeout(()=>{
       ringAlarm(time)
