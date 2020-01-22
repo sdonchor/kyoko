@@ -9,6 +9,7 @@
         :key="idx + 'msg'"
         class="message ma-2"
         v-for="(message, idx) in messages"
+        max-width="95%"
       >
       <div class="d-flex flex-no-wrap justify-space-between">
         <v-card-title>
@@ -17,7 +18,6 @@
               {{ message.name }}
             </div>
            
-         
         </v-card-title>
          <div>
               <v-icon color="error" v-on:click.stop="removeMessage(message.id)"

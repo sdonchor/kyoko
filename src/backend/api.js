@@ -11,17 +11,24 @@ const led_strip = require("./device_controllers/led_strip");
 const door_sensor = require("./device_controllers/door_sensor");
 const alarms = require("./modules/alarms");
 const messageboard = require("./modules/messageboard");
-const weather = require('./modules/weather');
+const weather = require("./modules/weather");
+const logger = require("./util/logger");
+const log = logger.log;
 
 const router = express.Router();
 
 /*****MIDDLEWARE*****/
-router.use(function middlewaretest(req, res, next) {
+router.use(async function visitorCheck(req, res, next) {
   let ua = req.headers["user-agent"];
   let time = dateformat(new Date(), "dd-mm-yyyy HH:MM:ss");
-  let visitors = fs.readFileSync("visitors.txt");
-  if (!visitors.includes(req.ip))
-    fs.appendFileSync("./visitors.txt", `[${time}] ${req.ip} using ${ua}\n`);
+  let visitors = await db.getVisitors();
+  let exists = false;
+  visitors.forEach(x => {
+    if (x.ip == req.ip) {
+      exists = true;
+    }
+  });
+  if (!exists) db.addVisitor(req.ip, ua, time);
   next();
 });
 
@@ -38,81 +45,90 @@ router.post("/login", async function(req, res) {
     cookiemanager.sendLogoutCookies(res);
 
     res.end("inactive");
-  } else { 
+  } else {
     cookiemanager.sendLoginCookies(res, authdata);
-    let client_authdata={
+    let client_authdata = {
       id: authdata.id,
       name: authdata.name,
       permission_level: authdata.permission_level
     };
+    log("security", `${authdata.name} has logged in.`);
     res.json(client_authdata);
   }
 });
 
 router.get("/login", async function(req, res) {
   let user = req.signedCookies.user;
-  if(user)
-  {
+  if (user) {
     let active = await db.isUserActive(user.id);
-    if(active){
+    if (active) {
       res.json(user);
-    }
-    else
-    {
+    } else {
       cookiemanager.sendLogoutCookies(res);
-
     }
   }
 });
 
 router.get("/logout", async function(req, res) {
+  log("security", `${req.signedCookies.user.name} logged out.`);
   cookiemanager.sendLogoutCookies(res);
-  res.end('ok');
+  res.end("ok");
 });
 
-
 /*****USER MANAGEMENT*****/
-router.get("/users",permsCheck(3),async function(req,res){
+router.get("/users", permsCheck(3), async function(req, res) {
   let users = await db.getAllUsers();
   res.json(users);
 });
 
-router.get("/users/:id(\\d+)",permsCheck(3),async function(req,res){
+router.get("/users/:id(\\d+)", permsCheck(3), async function(req, res) {
   let user = await db.getUserById(req.params.id);
   res.json(user);
 });
 
 /*****LED STRIP*****/
-router.post("/setLedStrip",permsCheck(5), function(req, res) {
+router.post("/setLedStrip", permsCheck(5), function(req, res) {
   led_strip.setLedStrip(req.body.r, req.body.g, req.body.b);
   res.end("ok");
 });
 
-router.get("/discoOn",permsCheck(5), function(req, res) {
+router.get("/discoOn", permsCheck(5), function(req, res) {
   led_strip.hsvCycleStart();
+  log("led", `${req.signedCookies.user.name} turned on disco mode.`);
   res.end("ok");
 });
 
-router.get("/discoOff",permsCheck(5), function(req, res) {
+router.get("/discoOff", permsCheck(5), function(req, res) {
   led_strip.hsvCycleStop();
+  log("led", `${req.signedCookies.user.name} turned off disco mode.`);
   res.end("ok");
 });
 
 /*****RELAY*****/
-router.get("/switchRelay/:id",permsCheck(5), function(req,res){
-  relay.switch(req.params.id)
+router.get("/switchRelay/:id", permsCheck(5), function(req, res) {
+  relay.switch(req.params.id);
+  log(
+    "relay",
+    `${req.signedCookies.user.name} switched relay channel ${req.params.id}.`
+  );
   res.end("ok");
 });
 
-router.get("/openDoor",permsCheck(2), function(req, res) {
+router.get("/openDoor", permsCheck(2), function(req, res) {
   relay.openDoor();
+  log("relay", `${req.signedCookies.user.name} has opened the door.`);
   res.end("ok");
 });
 
 router.get("/openDoorToken", async function(req, res) {
   if (req.query.token) {
     let auth = await db.tokenAuth(req.query.token);
-    if (auth == 1) {
+
+    if (auth) {
+      log(
+        "relay",
+        `Door was opened using token id ${auth.id} belonging to ${auth.name}.`
+      );
       relay.openDoor();
       res.end("ok");
       return;
@@ -122,74 +138,89 @@ router.get("/openDoorToken", async function(req, res) {
 });
 
 /*****SENSOR DATA*****/
-router.get("/getDHT11Reading",permsCheck(0), async function(req, res) {
+router.get("/getDHT11Reading", permsCheck(0), async function(req, res) {
   let json = fs.readFileSync("./src/backend/readings/dht11.json");
   res.end(json);
 });
 
-router.get("/getRpiTemp",permsCheck(0), async function(req, res) {
+router.get("/getRpiTemp", permsCheck(0), async function(req, res) {
   let json = fs.readFileSync("./src/backend/readings/rpi_temp.json");
   res.end(json);
 });
 
-router.get("/doorStatus",permsCheck(0), function(req,res){
+router.get("/doorStatus", permsCheck(0), function(req, res) {
   let status = door_sensor.isDoorOpen();
-  res.end(status?'1':'0');
+  res.end(status ? "1" : "0");
 });
 
 /*****ALARMS*****/
-router.get("/getAlarms",permsCheck(5), function(req, res) {
+router.get("/getAlarms", permsCheck(5), function(req, res) {
   res.json(alarms.getAlarms());
 });
 
-router.post("/setAlarm",permsCheck(5), function(req, res) {
+router.post("/setAlarm", permsCheck(5), function(req, res) {
   let description = req.body.description;
   let time = req.body.time;
-  if (alarms.addAlarm(description, time)) res.end("ok");
-  else res.end("exists");
+  if (alarms.addAlarm(description, time)) {
+    log(
+      "alarms",
+      `${req.signedCookies.user.name} added alarm at ${time}, description ${description}.`
+    );
+    res.end("ok");
+  } else res.end("exists");
 });
 
 router.post("/removeAlarm", permsCheck(5), function(req, res) {
   alarms.removeAlarm(req.body.idx);
+  log(
+    "alarms",
+    `${req.signedCookies.user.name} deleted alarm id ${req.body.idx}.`
+  );
   res.end("ok");
 });
 
 /*****MESSAGEBOARD*****/
-router.get("/messages",permsCheck(4), async function(req,res){
+router.get("/messages", permsCheck(4), async function(req, res) {
   let messages = await messageboard.getMessages();
   res.json(messages);
 });
-router.post("/messages",permsCheck(5),function(req,res){
-  const id  = req.signedCookies.user.id;
+router.post("/messages", permsCheck(5), function(req, res) {
+  const id = req.signedCookies.user.id;
   let message = {
     content: req.body.content,
     author: id
-  }
-  let status= messageboard.addMessage(message);
-  if(status)
-  {
+  };
+  let status = messageboard.addMessage(message);
+  if (status) {
+    log("messageboard", `${who} added message ${req.body.content}.`);
     res.json(status);
-  }
-  else
-  {
-    res.end('0');
+  } else {
+    res.end("0");
   }
 });
-router.delete("/messages/:id(\\d+)",permsCheck(5),function(req,res){ 
-  let status = messageboard.removeMessage(req.params.id);
-  if(status)
-  {
+router.delete("/messages/:id(\\d+)", permsCheck(5), function(req, res) {
+  let who = req.signedCookies.user.id;
+  let status = messageboard.removeMessage(req.params.id, who);
+  if (status) {
+    log("messageboard", `${who} deleted message id ${req.params.id}.`);
     res.json(status);
-  }
-  else
-  {
-    res.end('0');
+  } else {
+    res.end("0");
   }
 });
 
 /*****WEATHER*****/
-router.get('/weather',permsCheck(0),function(req,res){
+router.get("/weather", permsCheck(0), function(req, res) {
   res.json(weather.getWeather());
+});
+
+/*****SAFEMODE*****/
+router.put("/safemode",permsCheck(5),function(req,res){
+  door_sensor.setSafeMode(!door_sensor.getSafeMode());
+  res.json(door_sensor.getSafeMode());
 })
 
+router.get("/safemode", permsCheck(5), function(req,res){
+  res.json(door_sensor.getSafeMode());
+})
 module.exports = router;

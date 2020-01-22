@@ -1,0 +1,10 @@
+{
+  "host": "smtp.gmail.com",
+  "port": 587,
+  "auth": {
+    "user": "",
+    "pass": ""
+  },
+  "sender" : "\"Kyoko System\" <kyoko.smarthome@gmail.com>",
+  "receivers" : ["sdonchor@gmail.com","shaku1745@gmail.com"]
+}

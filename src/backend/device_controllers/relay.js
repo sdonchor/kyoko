@@ -2,18 +2,18 @@ const Gpio = require("onoff").Gpio;
 
 const buzzer = require("./buzzer");
 
-const ins = [new Gpio(2, "high", { reconfigureDirection: false }), null, null];
+const ins = [new Gpio(2, "high", { reconfigureDirection: false }), null, null,null]; //TODO add the rest of channels
 
 module.exports = {
   switch: function(id) {
-    let status = ins[id-1].readSync();
+    let status = ins[id].readSync();
     if(status==0)
     {
-      ins[id-1].writeSync(1);
+      ins[id].writeSync(1);
     }
     else
     {
-      ins[id-1].writeSync(0);
+      ins[id].writeSync(0);
     }
   },
   openDoor: function() {

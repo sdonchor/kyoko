@@ -1,5 +1,6 @@
 const dht = require("node-dht-sensor");
 const fs = require('fs');
+const db = require('../database/database_handler')
 async function dhtToFile() {
     let dht = await getDHT11Reading();
     fs.writeFile(global.rootDir + "/readings/dht11.json", JSON.stringify(dht), function(err) {
@@ -16,6 +17,7 @@ async function dhtToFile() {
           var dht11 = {};
           dht11.temp = temperature;
           dht11.humid = humidity;
+          db.addReading(temperature, humidity);
           resolve(dht11);
         } else {
           reject(err);

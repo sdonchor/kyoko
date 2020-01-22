@@ -26,14 +26,14 @@
         <tr>
           <td class="md-icon"><v-icon>mdi-arrow-up-bold</v-icon></td>
           <td>Max temperature:</td>
-          <td>{{ weather.temperature }}&deg;C</td>
+          <td>{{ weather.temperature_max }}&deg;C</td>
         </tr>
         <tr>
           <td class="md-icon">
             <v-icon>mdi-arrow-down-bold</v-icon>
           </td>
           <td>Min temperature:</td>
-          <td>{{ weather.temperature }}&deg;C</td>
+          <td>{{ weather.temperature_min }}&deg;C</td>
         </tr>
 
         <tr>

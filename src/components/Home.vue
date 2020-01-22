@@ -13,7 +13,7 @@
         </v-row>
         <v-row>
           <v-col lg="6">
-            <LedColorPicker></LedColorPicker>
+            <Led></Led>
           </v-col>
           <v-col lg="6"> 
 
@@ -29,16 +29,16 @@
 <script>
 import Temperature from "./cards/Temperature.vue";
 import OpenDoor from "./cards/OpenDoor.vue";
-import LedColorPicker from "./cards/LedColorPicker.vue";
+import Led from "./cards/SimpleLedColor.vue";
 import LoginForm from "./cards/LoginForm.vue";
 import Weather from "./cards/Weather.vue";
 export default {
   components: {
     Temperature,
     OpenDoor,
-    LedColorPicker,
     LoginForm,
-    Weather
+    Weather,
+    Led
   },
   name: "Home",
   data: function() {

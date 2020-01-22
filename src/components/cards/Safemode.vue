@@ -6,7 +6,11 @@
     <v-card-subtitle>
       Send an e-mail when door gets opened.
     </v-card-subtitle>
-    <v-switch v-model="toggle" :label="status?'On':'Off'"></v-switch>
+    <v-switch
+      v-model="toggle"
+      v-on:click.stop="safemodeToggle"
+      :label="status ? 'On' : 'Off'"
+    ></v-switch>
   </v-card>
 </template>
 
@@ -15,30 +19,29 @@ export default {
   name: "Safemode",
   data: function() {
     return {
-      status:false,
-      toggle:false
+      status: false,
+      toggle: false
     };
   },
   methods: {
-    safemodeToggle: function(ins){
-      axios.put('/api/safemode').then(response=>{
-        this.status=response;
-      })
+    safemodeToggle: function(ins) {
+      axios.put("/api/safemode").then(response => {
+        this.status = response.data;
+        this.toggle = response.data;
+      });
     },
-    getStatus: function(){
-      axios.get('/api/safemode').then(response=>{
-        this.status=response;
-      })
+    getStatus: function() {
+      axios.get("/api/safemode").then(response => {
+        this.status = response.data;
+        this.toggle = response.data;
+      });
     }
   },
-  created() {
-  },
+  created() {},
   mounted() {
     this.getStatus();
   }
 };
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

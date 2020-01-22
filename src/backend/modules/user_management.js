@@ -1,5 +1,7 @@
 const db = require('../database/database_handler')
-
+const logger = require('../util/logger');
+const utils = require('../util/utils');
+const log = logger.log;
 module.exports={
     async logIn(pw){
         let auth = await db.getUserByPassword(pw);
@@ -20,6 +22,13 @@ module.exports={
             }
             else
             {
+                let user = req.signedCookies.user ? 
+                `(ID: ${req.signedCookies.user.id}) ${req.signedCookies.user.name}` : 
+                'Unknown user';
+                let perms = req.signedCookies.user ?
+                req.signedCookies.user.permission_level:
+                -1;
+                log("security",`${user} tried to access '${req.originalUrl}' with insufficient permissions (has ${perms}, required ${required}).`);
                 res.end('0');
             }
         }
@@ -28,5 +37,31 @@ module.exports={
     async getUserById(id){
         let user = await db.getUserById(id);
         return user;
+    },
+    async addUser(name,pw,permission_level,active){
+        let user = {
+            name,
+            pwhash: utils.hash(pw),
+            permission_level,
+            active
+        }
+        let status = await db.addUser(user);
+        return status;
+    },
+    async removeUser(id){
+
+    },
+    async editUser(id, name, pw,permission_level,active)
+    {
+        let pwhash = pw ? utils.hash(pw) : null;
+        let user = {
+            id,
+            name,
+            pwhash,
+            permission_level,
+            active
+        }
+        let status = db.editUser(user);
+        return status;
     }
 }

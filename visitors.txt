@@ -20,3 +20,5 @@
 [17-01-2020 4:01:25] 37.47.75.3 using HttpShortcuts/1.24.2 (Linux; U; Android 7.0; Redmi Note 4 MIUI/V11.0.2.0.NCFMIXM)
 [18-01-2020 10:01:22] 37.47.67.188 using HttpShortcuts/1.24.2 (Linux; U; Android 7.0; Redmi Note 4 MIUI/V11.0.2.0.NCFMIXM)
 [19-01-2020 17:30:38] 37.47.72.98 using HttpShortcuts/1.24.2 (Linux; U; Android 7.0; Redmi Note 4 MIUI/V11.0.2.0.NCFMIXM)
+[20-01-2020 06:54:08] 213.76.41.168 using Mozilla/5.0 (Linux; Android 8.0.0; MI 5s Plus) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.62 Mobile Safari/537.36
+[20-01-2020 08:59:05] 37.47.69.32 using Tasker/5.8.5 (Android/8.0.0)
