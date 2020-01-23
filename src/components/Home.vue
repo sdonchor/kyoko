@@ -12,13 +12,10 @@
           </v-col>
         </v-row>
         <v-row>
-          <v-col lg="6">
+          <v-col lg="12">
             <Led></Led>
           </v-col>
-          <v-col lg="6"> 
 
-            
-          </v-col>
         </v-row>
 
       

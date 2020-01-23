@@ -4,7 +4,9 @@ import Home from "../components/Home.vue";
 import Alarms from "../components/Alarms.vue";
 import Messageboard from "../components/Messageboard.vue";
 import Control from "../components/Control.vue";
-import Config from "../components/Config.vue"
+import Config from "../components/Config.vue";
+import Readings from "../components/Readings.vue";
+import Logs from "../components/Logs.vue";
 Vue.use(VueRouter);
 
 const routes = [
@@ -32,6 +34,17 @@ const routes = [
     path: "/config",
     name: "config",
     component: Config
+  },
+  {
+    path: "/logs",
+    name: "logs",
+    component: Logs
+  }
+  ,
+  {
+    path: "/readings",
+    name: "readings",
+    component: Readings
   }
 ];
 

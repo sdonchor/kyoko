@@ -9,43 +9,36 @@
       >
         <v-tabs-slider></v-tabs-slider>
 
+        <v-tab href="#modules">
+          Modules
+        </v-tab>
         <v-tab href="#mailer">
           Mailer
         </v-tab>
-        <v-tab href="#mailer23">
-          LED Strip
-        </v-tab>
-        <v-tab href="#mailer233">
-          Sensors
-        </v-tab>
-        <v-tab href="#mailer233">
-          Weather
-        </v-tab>
 
+        <v-tab-item value="modules">
+          <ModulesConfig></ModulesConfig>
+        </v-tab-item>
         <v-tab-item value="mailer">
-          <v-card class="pa-3" flat tile>
-            test1
-          </v-card>
-        </v-tab-item>
-        <v-tab-item value="mailer23">
           <v-card  class="pa-3" flat tile>
-            test1
+            <MailerConfig></MailerConfig>
           </v-card>
         </v-tab-item>
-        <v-tab-item value="mailer233">
-          <v-card  class="pa-3" flat tile>
-            test1
-          </v-card>
-        </v-tab-item>
+        
       </v-tabs>
     </v-container>
   </div>
 </template>
 
 <script>
+import ModulesConfig from './cards/ModulesConfig.vue'
+import MailerConfig from './cards/MailerConfig.vue'
 export default {
   name: "Config",
-  components: {},
+  components: {
+    ModulesConfig,
+    MailerConfig
+  },
   data: function() {
     return {
       tab: null

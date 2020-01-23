@@ -1,10 +1,9 @@
 const fs = require("fs");
 
 let configs = {
-    sensors : {config : null, path:__dirname+"/sensors.json"},
-    weather : {config : null, path:__dirname+"/weather.json"},
-    led : {config : null, path:__dirname+"/led.json"},
-    mailer: {config: null, path:__dirname+"/mailer.json"}
+    weather : {config : null, path: __dirname+"/weather.json"},
+    led : {config : null, path: __dirname+"/led.json"},
+    mailer: {config: null, path: __dirname+"/mailer.json"}
 }
 
 const reloadConfig = function(moduleName){
@@ -27,7 +26,7 @@ const getConfig = function(moduleName){
     {
         return configs;
     }
-    else
+    else if(modu)
     {
         return configs[moduleName].config;
     }
@@ -42,17 +41,19 @@ const saveConfig = function(moduleName){
         }
     }
     else{
+        console.log(moduleName);
+        console.log(configs[moduleName]);
         fs.writeFileSync(configs[moduleName].path,configs[moduleName].config);
     }
 }
-const editConfig = function(moduleName,config){
+const editConfig = function(moduleName,configuration){
     if(moduleName='all')
     {
         configs = config;
     }
     else
     {
-        configs[moduleName].config = config;
+        configs[moduleName].config = configuration;
     }
 }
 

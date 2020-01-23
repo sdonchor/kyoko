@@ -220,5 +220,34 @@ module.exports = {
         }
       )
     })
+  },
+  /**LOGS**/
+  getLogCategories: function(){
+    return new Promise(function(resolve,reject){
+      db.all('SELECT DISTINCT category FROM logs', (err,rows)=>{
+        if(err){
+          console.log(err);
+          resolve(false);
+        }
+        else
+        {
+          resolve(rows);
+        }
+      });
+    })
+  },
+  getLogs: function(){
+    return new Promise(function(resolve,reject){
+      db.all('SELECT * FROM logs ORDER BY time DESC', (err,rows)=>{
+        if(err){
+          console.log(err);
+          resolve(false);
+        }
+        else
+        {
+          resolve(rows);
+        }
+      });
+    })
   }
 };

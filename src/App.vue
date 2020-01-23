@@ -11,12 +11,12 @@
           </v-list-item-content>
         </v-list-item>
 
-        <v-list-item to="/messageboard"  v-if="checkPerms(4)">
+        <v-list-item to="/messageboard"  v-if="checkPerms(5)">
           <v-list-item-action>
             <v-icon>mdi-forum</v-icon>
           </v-list-item-action>
           <v-list-item-content>
-            <v-list-item-title>Messageboard</v-list-item-title>
+            <v-list-item-title>Message board</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
 

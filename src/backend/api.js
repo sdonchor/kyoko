@@ -14,6 +14,7 @@ const messageboard = require("./modules/messageboard");
 const weather = require("./modules/weather");
 const logger = require("./util/logger");
 const log = logger.log;
+const config = require("./configs/config");
 
 const router = express.Router();
 
@@ -153,6 +154,11 @@ router.get("/doorStatus", permsCheck(0), function(req, res) {
   res.end(status ? "1" : "0");
 });
 
+router.get("/doorLastOpened",permsCheck(3),async function(req,res){
+  let status = await door_sensor.lastOpened();
+  res.end(status);
+})
+
 /*****ALARMS*****/
 router.get("/getAlarms", permsCheck(5), function(req, res) {
   res.json(alarms.getAlarms());
@@ -215,12 +221,46 @@ router.get("/weather", permsCheck(0), function(req, res) {
 });
 
 /*****SAFEMODE*****/
-router.put("/safemode",permsCheck(5),function(req,res){
+router.put("/safemode", permsCheck(5), function(req, res) {
   door_sensor.setSafeMode(!door_sensor.getSafeMode());
   res.json(door_sensor.getSafeMode());
+});
+
+router.get("/safemode", permsCheck(5), function(req, res) {
+  res.json(door_sensor.getSafeMode());
+});
+
+/*****CONFIG*****/
+router.get("/config/:type", permsCheck(10), function(req, res) {
+  if (req.params.type == "modules") {
+    let modulesConfig = {
+      weather: config.getConfig("weather"),
+      led: config.getConfig("led")
+    };
+    res.json(modulesConfig);
+  } else if(req.params.type=="mailer"){
+    res.json(config.getConfig("mailer"));
+  }
+});
+
+router.post("/config/:type",permsCheck(10), function(req,res){
+  if (req.params.type == "modules") {
+    config.editConfig("weather",req.body.weather);
+    config.editConfig("led",req.body.led);
+
+    config.saveConfig("weather");
+    config.saveConfig("led");
+
+  }
+})
+/*****LOGS*****/
+router.get("/logcategories",permsCheck(9), async function(req,res){
+  let categories = await db.getLogCategories();
+  res.json(categories);
 })
 
-router.get("/safemode", permsCheck(5), function(req,res){
-  res.json(door_sensor.getSafeMode());
+router.get("/logs",permsCheck(9), async function(req,res){
+  let logs = await db.getLogs();
+  res.json(logs);
 })
 module.exports = router;

@@ -6,6 +6,7 @@ const ins = [new Gpio(2, "high", { reconfigureDirection: false }), null, null,nu
 
 module.exports = {
   switch: function(id) {
+    if(!ins[id]) return false;
     let status = ins[id].readSync();
     if(status==0)
     {

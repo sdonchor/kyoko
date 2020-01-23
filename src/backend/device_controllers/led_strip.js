@@ -4,8 +4,9 @@ const led_strip_red = new pigpio(21, { mode: pigpio.OUTPUT });
 const led_strip_green = new pigpio(20, { mode: pigpio.OUTPUT });
 const led_strip_blue = new pigpio(16, { mode: pigpio.OUTPUT });
 const rgb_interval = null;
-const animation_speed = 3;
+
 const utils = require('../util/utils')
+const configModule = require('../configs/config');
 
 let hsv_interval = null;
 let hue=0;
@@ -43,8 +44,9 @@ function ledStripRandom() {
 module.exports = {
   setLedStrip,
   hsvCycleStart: function() {
+    let config = configModule.getConfig('led');
     if(hsv_interval===null)
-      hsv_interval=setInterval(cycleHSV,animation_speed);
+      hsv_interval=setInterval(cycleHSV,config.animationSpeed);
   },
   hsvCycleStop: function(){
       clearInterval(hsv_interval);

@@ -1,4 +1,5 @@
 {
-    "refreshInterval":300000,
-    "cityId": 3094802
+    "api_key": "1a4cf33271b02054c45a222e7d722289",
+    "city_id": 3094802,
+    "units": "metric"
 }

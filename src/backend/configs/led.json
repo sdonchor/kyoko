@@ -1,4 +1,3 @@
 {
-    "animationSpeed": 3,
-    "simpleColors": ["#FFFFFF","#610C00","#FF0000","#FFA400","#75FF00","#00FF1A","#00FFB8","#0200FF","#FD00FF","#FF006B"]
+    "animationSpeed": 20
 }
